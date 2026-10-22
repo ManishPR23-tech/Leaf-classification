@@ -5,8 +5,6 @@ __pycache__/
 data/raw/
 data/processed/
 flower.zip
-# Trained machine learning models
 models/
-
-# Generated reports and figures
 reports/
+/IMG_20250923_170530_original_backup.jpg

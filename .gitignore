@@ -6,5 +6,14 @@ data/raw/
 data/processed/
 flower.zip
 models/
-reports/
+
+reports/*
+!reports/figures/
+!reports/model_comparison.csv
+
+reports/figures/*
+!reports/figures/model_accuracy_comparison.png
+!reports/figures/cnn_confusion_matrix.png
+!reports/figures/tuned_svm_validation_confusion_matrix.png
+
 /IMG_20250923_170530_original_backup.jpg

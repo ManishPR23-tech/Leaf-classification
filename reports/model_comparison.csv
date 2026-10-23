@@ -1,0 +1,7 @@
+
+model,test_accuracy,notes
+Original SVM,0.8500,"Baseline using PCA and raw pixel features"
+Random Forest,0.8500,"Baseline tree ensemble"
+HOG-SVM,0.8056,"Uses HOG image features"
+Tuned SVM,0.8500,"Selected using validation accuracy"
+CNN,0.8556,"Convolutional neural network; 128x128 input images"

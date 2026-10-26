@@ -47,7 +47,7 @@ print("\nClassification report:")
 print(classification_report(y_val, y_pred, zero_division=0))
 
 # Save the trained model
-model_path = MODEL_DIR / "svm_model.joblib"
+model_path = MODEL_DIR / "svm_model_6class.joblib"
 joblib.dump(model, model_path)
 
 print("\nModel saved to:", model_path)

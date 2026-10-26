@@ -21,7 +21,12 @@ tf.keras.utils.set_random_seed(SEED)
 
 IMAGE_SIZE = (160, 160)
 BATCH_SIZE = 16
-CLASS_NAMES = ["hibiscus", "marigold", "rose"]
+CLASS_NAMES = ["hibiscus",
+    "lotus",
+    "marigold",
+    "rose",
+    "rose_periwinkle",
+    "unknown"]
 
 # Load datasets
 print("Loading training dataset...")
@@ -84,7 +89,7 @@ model.compile(
 model.summary()
 
 # Save the best model using validation accuracy
-MODEL_PATH = MODEL_DIR / "mobilenet_best.keras"
+MODEL_PATH = MODEL_DIR / "mobilenet_6class_best.keras"
 
 callbacks = [
     keras.callbacks.ModelCheckpoint(
@@ -115,7 +120,7 @@ history = model.fit(
 # Save training history
 history_df = pd.DataFrame(history.history)
 
-HISTORY_PATH = REPORT_DIR / "mobilenet_training_history.csv"
+HISTORY_PATH = REPORT_DIR / "mobilenet_6class_training_history.csv"
 history_df.to_csv(HISTORY_PATH, index=False)
 
 print("\nTraining finished.")

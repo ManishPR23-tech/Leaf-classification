@@ -1,71 +1,88 @@
 # Leaf Classification Using Machine Learning and Deep Learning
 
-A machine-learning project to classify leaf images into three flower species: **Hibiscus, Marigold, and Rose**.
+A leaf-image classification project combining classical machine learning and deep learning to classify images into six categories: **Hibiscus, Lotus, Marigold, Rose, Rose Periwinkle, and Unknown (Togor)**.
 
-The project compares classical machine-learning algorithms with a Convolutional Neural Network (CNN) to investigate how different approaches perform on leaf-image classification.
+The project explores image preprocessing, feature extraction, model training, evaluation, error analysis, and image-based prediction through a Streamlit application.
 
 ## Project Objectives
 
 - Build a reproducible image-classification pipeline.
-- Explore and prepare a labeled leaf-image dataset.
-- Train and evaluate multiple classification models.
-- Compare model performance using accuracy and confusion matrices.
-- Identify classification errors and areas for improvement.
+- Organize and explore a labeled image dataset.
+- Extract image features and train classical machine-learning models.
+- Train a convolutional neural network and evaluate a MobileNetV2 transfer-learning model.
+- Compare predictions using accuracy, precision, recall, F1-score, and confusion matrices.
+- Explore unknown-category classification and inspect model errors.
+- Provide an interface for making predictions on leaf images.
 
 ## Dataset
 
-The project uses images from the BPLD (Bangladeshi Plant Leaves Dataset), selecting three flower classes:
+The dataset was assembled from the Bangladeshi Plant Leaves Dataset (BPLD) and additional flower-leaf images. The original image files are stored locally and are not included in this Git repository.
+
+The six model categories are:
 
 - Hibiscus
+- Lotus
 - Marigold
 - Rose
+- Rose Periwinkle
+- Unknown (Togor)
 
-| Dataset split | Images per class | Total images |
-|---|---:|---:|
-| Training | 280 | 840 |
-| Validation | 60 | 180 |
-| Testing | 60 | 180 |
-| **Total** | **400** | **1,200** |
+The source folders contain 2,400 files. Exact duplicate files are excluded within each class during dataset splitting, leaving 2,394 unique source images.
 
-The dataset is divided into training, validation, and testing subsets. The same split is used for the model comparisons.
+| Split | Images |
+|---|---:|
+| Training | 1,675 |
+| Validation | 359 |
+| Testing | 360 |
+| **Total** | **2,394** |
 
-**Dataset note:** The image files are stored locally and are not included in this Git repository. See the project setup instructions before running the scripts.
+Each test class contains 60 images. The rose class has fewer training and validation images because duplicate source files were excluded.
+
+The `unknown` category represents Togor images used as an unknown-category training class. It should not be interpreted as a guarantee that the model can recognize every plant species absent from its training data.
 
 ## Models
 
-The project currently includes five approaches:
+The repository contains implementations and evaluation scripts for several approaches:
 
-1. **Original SVM** — a baseline using PCA and raw pixel features.
-2. **Random Forest** — a tree-based ensemble classifier.
-3. **HOG-SVM** — uses Histogram of Oriented Gradients (HOG) image features with an SVM classifier.
-4. **Tuned SVM** — evaluates selected hyperparameter configurations using validation accuracy.
-5. **CNN** — a convolutional neural network trained on images resized to 128 × 128 pixels.
+1. **SVM:** A classical baseline using image pixel features and preprocessing.
+2. **Random Forest:** A tree-based ensemble classifier.
+3. **HOG-SVM:** An SVM trained using Histogram of Oriented Gradients features.
+4. **Tuned SVM:** An SVM configuration selected using validation performance.
+5. **CNN:** A convolutional neural network for image classification.
+6. **MobileNetV2:** A deep-learning image classifier evaluated on the six-category dataset.
+
+Saved models and supporting files are stored in `models/` locally. Availability depends on which model artifacts have been downloaded or generated.
 
 ## Results
 
-The following are the currently recorded test-set accuracies:
+### Six-class MobileNetV2 evaluation
 
-| Model | Test accuracy |
+The saved MobileNetV2 model was evaluated on the existing test dataset using `src/evaluate_mobilenet_6class.py`.
+
+| Metric | Result |
 |---|---:|
-| Original SVM | 85.00% |
-| Random Forest | 85.00% |
-| HOG-SVM | 80.56% |
-| Tuned SVM | 85.00% |
-| CNN | **85.56%** |
+| Test images | 360 |
+| Correct predictions | 357 |
+| Incorrect predictions | 3 |
+| **Test accuracy** | **99.17%** |
 
-The CNN achieved the highest recorded test accuracy, correctly classifying 154 out of 180 test images.
+Per-class performance:
 
-These results are exploratory: the test set has been used to compare multiple models. Future model selection and tuning should rely on validation data, with a final untouched test set reserved for unbiased evaluation.
+| Class | Precision | Recall | F1-score |
+|---|---:|---:|---:|
+| Hibiscus | 0.98 | 0.98 | 0.98 |
+| Lotus | 1.00 | 0.98 | 0.99 |
+| Marigold | 1.00 | 1.00 | 1.00 |
+| Rose | 1.00 | 1.00 | 1.00 |
+| Rose Periwinkle | 1.00 | 0.98 | 0.99 |
+| Unknown | 0.97 | 1.00 | 0.98 |
+| **Overall accuracy** | | | **0.99** |
 
-## Visualizations
+The confusion matrix showed three incorrect predictions: one hibiscus image, one lotus image, and one rose-periwinkle image were misclassified.
 
-The repository includes the following generated results:
+These results describe the current test split and do not guarantee equivalent performance on images from different environments, cameras, lighting conditions, or unseen plant species. The unknown-category results specifically measure performance on the included Togor examples.
 
-- `reports/figures/model_accuracy_comparison.png` — comparison of test accuracy across the five models.
-- `reports/figures/cnn_confusion_matrix.png` — CNN classification results by actual and predicted class.
-- `reports/figures/tuned_svm_validation_confusion_matrix.png` — validation confusion matrix for the tuned SVM.
-
-The CNN confusion matrix indicates that marigold is currently the most challenging class, particularly because some marigold images are predicted as rose.
+The repository also contains older three-class model-comparison results. Those results are not directly comparable with the six-class MobileNetV2 result because they use a different classification task.
 
 ## Project Structure
 
@@ -73,35 +90,24 @@ The CNN confusion matrix indicates that marigold is currently the most challengi
 Leaf-classification/
 ├── data/
 │   ├── raw/
+│   ├── unknown_raw/
 │   └── processed/
+│       ├── train/
+│       ├── val/
+│       └── test/
 ├── models/
 ├── notebooks/
 ├── reports/
 │   ├── figures/
 │   └── model_comparison.csv
 ├── src/
-│   ├── utils/
-│   ├── check_image_integrity.py
-│   ├── evaluate_cnn.py
-│   ├── evaluate_model.py
-│   ├── evaluate_random_forest.py
-│   ├── evaluate_hog_svm.py
-│   ├── evaluate_tuned_svm.py
-│   ├── extract_features.py
-│   ├── extract_hog_features.py
-│   ├── plot_cnn_confusion_matrix.py
-│   ├── plot_model_comparison.py
-│   ├── plot_tuned_confusion_matrix.py
-│   ├── split_dataset.py
-│   ├── train_cnn.py
-│   ├── train_random_forest.py
-│   ├── train_svm.py
-│   ├── train_hog_svm.py
-│   └── tune_svm.py
+│   └── ... preprocessing, training,
+│       evaluation, and visualization scripts
+├── app.py
 └── README.md
 ```
 
-Some generated files and folders are stored locally and may not be tracked by Git. The structure above describes the main project components.
+The exact files present locally may vary. Dataset images and some trained models are not tracked by Git.
 
 ## Requirements
 
@@ -111,76 +117,79 @@ Some generated files and folders are stored locally and may not be tracked by Gi
 - Matplotlib
 - scikit-learn
 - TensorFlow / Keras
-- Seaborn
 - Pillow
+- Streamlit for the web application
 
-Install the required libraries in your project's virtual environment. For example, in Windows PowerShell:
-
-```powershell
-.\.venv\Scripts\python.exe -m pip install numpy pandas matplotlib scikit-learn tensorflow seaborn pillow
-```
+Additional libraries may be required by individual scripts.
 
 ## Setup
 
-1. Clone the repository:
+Clone the repository:
 
-   ```powershell
-   git clone https://github.com/ManishPR23-tech/Leaf-classification.git
-   cd Leaf-classification
-   ```
+```powershell
+git clone https://github.com/ManishPR23-tech/Leaf-classification.git
+cd Leaf-classification
+```
 
-2. Create and activate a virtual environment:
+Create and activate a virtual environment:
 
-   ```powershell
-   py -3.11 -m venv .venv
-   .\.venv\Scripts\Activate.ps1
-   ```
+```powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+```
 
-3. Install the required libraries using the command above.
+Install the required libraries:
 
-4. Obtain the dataset separately and arrange the images according to the directory structure expected by the scripts:
+```powershell
+python -m pip install numpy pandas matplotlib scikit-learn tensorflow pillow streamlit joblib scikit-image
+```
 
-   ```text
-   data/processed/
-   ├── train/
-   │   ├── hibiscus/
-   │   ├── marigold/
-   │   └── rose/
-   ├── val/
-   │   ├── hibiscus/
-   │   ├── marigold/
-   │   └── rose/
-   └── test/
-       ├── hibiscus/
-       ├── marigold/
-       └── rose/
-   ```
+Obtain the dataset separately and arrange it according to the directory structure expected by the scripts. The preprocessing and evaluation scripts contain the expected class names and paths.
 
-5. Run the scripts from the repository root using the virtual environment's Python interpreter. For example:
+## Running the Application
 
-   ```powershell
-   .\.venv\Scripts\python.exe src/train_cnn.py
-   .\.venv\Scripts\python.exe src/evaluate_cnn.py
-   .\.venv\Scripts\python.exe src/plot_model_comparison.py
-   ```
+From the repository root, activate the virtual environment and run:
 
-**Note:** The training scripts may depend on generated features or trained models. Follow the appropriate preprocessing and training steps before running dependent evaluation scripts.
+```powershell
+streamlit run app.py
+```
+
+The application requires the relevant trained model files and any supporting files referenced by `app.py`.
+
+## Running Evaluations
+
+To evaluate the saved six-class MobileNetV2 model:
+
+```powershell
+python src/evaluate_mobilenet_6class.py
+```
+
+To evaluate the saved six-class SVM:
+
+```powershell
+python src/evaluate_svm_6class.py
+```
+
+These commands evaluate existing models; they do not retrain them.
+
+Other scripts in `src/` support feature extraction, model evaluation, dataset inspection, and visualization. Check each script's dependencies before running it.
 
 ## Limitations
 
-- The dataset contains only three flower classes.
-- Results may depend on lighting, background, image quality, and variation within each class.
-- Test accuracy alone does not establish that one model is significantly better than another.
-- The dataset and trained model files are not included in the Git repository.
+- The dataset covers a limited set of leaf categories.
+- The `unknown` class represents the Togor examples used in this project, not every possible unseen species.
+- Model performance may change with image quality, background, lighting, and acquisition conditions.
+- High accuracy on one test split does not establish generalization to all real-world images.
+- The older three-class and newer six-class results use different tasks and should not be compared directly.
+- Dataset files and some model artifacts are excluded from the Git repository.
 
 ## Future Work
 
-- Improve marigold-versus-rose discrimination.
-- Investigate data augmentation and class weighting using validation data.
-- Inspect misclassified images to understand common error patterns.
-- Evaluate the final selected model on a fresh, untouched test set.
-- Explore transfer learning with a pretrained image-classification model.
-- Develop a simple interface for predicting the class of a new leaf image.
+- Evaluate performance on independent images collected under different conditions.
+- Improve rejection of genuinely unfamiliar species beyond the trained unknown category.
+- Inspect failure cases and test robustness to backgrounds, lighting, and image quality.
+- Compare models on the same six-class split using consistent metrics.
+- Improve reproducibility through documented dependencies, dataset metadata, and evaluation records.
 
 ## Repository
 

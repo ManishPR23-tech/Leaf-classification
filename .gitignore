@@ -5,6 +5,7 @@ __pycache__/
 data/
 flower.zip
 models/
+!models/mobilenet_6class_best.keras
 
 reports/*
 !reports/figures/
